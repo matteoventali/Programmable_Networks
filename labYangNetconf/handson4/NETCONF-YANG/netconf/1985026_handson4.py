@@ -29,7 +29,7 @@ def query_device(device):
             
 
 # NETCONF filter to use
-netconf_filter = open("my-filter-ietf-interfaces.xml").read()
+netconf_filter = open("1985026_handson4.xml").read()
 
 if __name__ == '__main__':
     # Scanning all the devices
