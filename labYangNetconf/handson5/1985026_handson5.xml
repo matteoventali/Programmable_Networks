@@ -1,12 +1,12 @@
 <filter xmlns="urn:ietf:params:xml:ns:netconf:base:1.0">
-  <interfaces xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
-    <interface>
-      <name>GigabitEthernet1</name>
-    </interface>
-  </interfaces>
   <interfaces-state xmlns="urn:ietf:params:xml:ns:yang:ietf-interfaces">
     <interface>
-      <name>GigabitEthernet1</name>
+      <type xmlns:ianaift="urn:ietf:params:xml:ns:yang:iana-if-type">ianaift:ethernetCsmacd</type>
+      <name/>
+      <statistics>
+        <out-octets/>
+        <out-unicast-pkts/>
+      </statistics>
     </interface>
   </interfaces-state>
 </filter>
