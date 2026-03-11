@@ -1,0 +1,23 @@
+configs = [
+   {
+      "device_id":1,
+      "ospf_processId":1,
+      "ospf_ip":"10.0.3.0",
+      "ospf_wildcard":"0.255.255.255",
+      "ospf_area":"0.0.0.0"
+   },
+   {
+      "device_id":1,
+      "ospf_processId":1,
+      "ospf_ip":"10.0.1.0",
+      "ospf_wildcard":"0.255.255.255",
+      "ospf_area":"0.0.0.0"
+   },
+   {
+      "device_id":1,
+      "ospf_processId":1,
+      "ospf_ip":"11.1.1.0",
+      "ospf_wildcard":"0.255.255.255",
+      "ospf_area":"0.0.0.0"
+   },
+]
