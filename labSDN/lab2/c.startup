@@ -1,8 +1,8 @@
 ip addr add 20.0.1.4/24 dev eth0
 
 # Starting the Controller software
-#chmod +x /pox/pox.py
-#/pox/pox.py samples.pretty_log openflow.discovery forwarding.l2_learning openflow.of_01 -port=6653
+chmod +x /pox/pox.py
+/pox/pox.py samples.pretty_log openflow.discovery forwarding.l2_learning openflow.of_01 -port=6653
 
 # Sniffing
 tcpdump -i eth0 -w /shared/controller.pcap &
