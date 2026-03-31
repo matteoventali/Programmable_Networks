@@ -23,7 +23,7 @@ class ComponentA (object):
 
         print(f"After swap: src->{ethernet_frame.src} dst->{ethernet_frame.dst}")
 
-        # Send the frame back with outpot port the one that has been received
+        # Send the frame back with output port the one that has been received
         msg = of.ofp_packet_out()
         msg.data = ethernet_frame.pack()
         msg.actions.append(of.ofp_action_output(port = event.port))
