@@ -25,7 +25,7 @@ class ComponentA (object):
 
         # Send the frame back with output port the one that has been received
         msg = of.ofp_packet_out()
-        msg.data = ethernet_frame.pack()
+        msg.data = ethernet_frame
         msg.actions.append(of.ofp_action_output(port = event.port))
         event.connection.send(msg)
 

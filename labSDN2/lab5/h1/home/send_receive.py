@@ -6,7 +6,7 @@ def send_pacchetto():
     sendp(frame, iface="eth0")
 
 def stampa_cattura():
-    sniff(count=1, iface="eth0", prn=lambda x: x.show(), timeout=5)
+    sniff(count=2, iface="eth0", prn=lambda x: x.show(), timeout=5)
 
 P1 = Thread(target = send_pacchetto)
 P2 = Thread(target = stampa_cattura)
