@@ -1,5 +1,7 @@
 ip addr add 20.0.1.100/24 dev eth0
 
+udhcpc -i eth1
+
 #apt-get update
 #apt install python3-networkx -y
 #apt install python3-numpy -y

@@ -74,9 +74,6 @@ class Routing():
 	'''
 	def install_path(self, path, ip_src, ip_dst):
 		
-		def node_to_sid(node):
-			return int(node.replace('s', ''))
-
 		def get_out_port(sid_a, sid_b):
 			for link in core.linkDiscovery.links.values():
 				if link.sid1 == sid_a and link.sid2 == sid_b:
@@ -87,8 +84,8 @@ class Routing():
 
 		# Installing the flow rules
 		for i in range(len(path) - 1):
-			sid_curr = node_to_sid(path[i])
-			sid_next = node_to_sid(path[i + 1])
+			sid_curr = path[i]
+			sid_next = path[i + 1]
 
 			out_port = get_out_port(sid_curr, sid_next)
 			if out_port is None:
@@ -113,7 +110,7 @@ class Routing():
 			conn.send(fm)
 
 		# Last hop into the path
-		last_sid = node_to_sid(path[-1])
+		last_sid = path[-1]
 		dpid_last = core.linkDiscovery.switch_id[last_sid]
 		conn_last = core.openflow.getConnection(dpid_last)
 
