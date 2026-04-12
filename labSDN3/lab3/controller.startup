@@ -2,8 +2,13 @@ ip addr add 20.0.1.100/24 dev eth0
 
 udhcpc -i eth1
 
+ln -s /shared/network_discovery.py pox/ext/network_discovery.py
+ln -s /shared/routing.py pox/ext/routing.py
+
 #apt-get update
+#apt install libpython3.11-stdlib -y
 #apt install python3-networkx -y
 #apt install python3-numpy -y
+#apt --fix-broken install -y
 
 chmod +x /home/pox/pox.py

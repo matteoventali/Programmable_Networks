@@ -37,8 +37,7 @@ class Routing():
 
 	def _handle_PacketIn(self, event):
 		eth_frame = event.parsed
-		output_log = ""
-
+		
 		if eth_frame.type == ethernet.ARP_TYPE and eth_frame.dst == EthAddr("00:00:00:00:11:11"):
 			arp_msg = eth_frame.payload
 			if arp_msg.opcode == arp.REPLY:
@@ -53,17 +52,16 @@ class Routing():
 			ip_dst = ip_pkt.dstip
 			switch_src = self.host_location[ip_src.toStr()]
 			switch_dst = self.host_location[ip_dst.toStr()]
+
 			S = list(core.linkDiscovery.switch_id.keys())[list(core.linkDiscovery.switch_id.values()).index(switch_src)]
 			D = list(core.linkDiscovery.switch_id.keys())[list(core.linkDiscovery.switch_id.values()).index(switch_dst)]
 
-			output_log = f"Ip packet from {ip_src} to {ip_dst} from switch {S} to {D}"
-
 			graph = core.linkDiscovery.getGraph()
 			path = nx.shortest_path(graph, S, D)
-			#print(path)
-			output_log = output_log + f"\nPath: {path}"
-			print(output_log)
+			print(path)
 			self.install_path(path, ip_src, ip_dst)
+
+			# For optimization we can install the reverse path directly
 
 	''' Method to install the flow rules across following the path
 		Assuming we have a list ['s1', ..., 's_i', s_j', ...] we must:
@@ -86,6 +84,8 @@ class Routing():
 		for i in range(len(path) - 1):
 			sid_curr = path[i]
 			sid_next = path[i + 1]
+			
+			print(f"Processing flow rule for {hex(core.linkDiscovery.switch_id[sid_curr])} -> {hex(core.linkDiscovery.switch_id[sid_next])}")
 
 			out_port = get_out_port(sid_curr, sid_next)
 			if out_port is None:
@@ -103,8 +103,8 @@ class Routing():
 			fm.match.nw_src = IPAddr(ip_src)
 			fm.match.nw_dst = IPAddr(ip_dst)
 
-			fm.idle_timeout = 10
-			fm.hard_timeout = 30
+			fm.idle_timeout = 500
+			fm.hard_timeout = 1000
 
 			fm.actions.append(of.ofp_action_output(port=out_port))
 			conn.send(fm)
@@ -114,16 +114,16 @@ class Routing():
 		dpid_last = core.linkDiscovery.switch_id[last_sid]
 		conn_last = core.openflow.getConnection(dpid_last)
 
-		if conn_last is not None and ip_dst in self.host_location:
-			(_, host_port) = self.host_location[ip_dst]
+		print(f"Processing output rule for {hex(dpid_last)}\t{conn_last}")
 
+		if conn_last is not None:
 			fm = of.ofp_flow_mod()
 			fm.priority = 100
 			fm.match.dl_type = ethernet.IP_TYPE
 			fm.match.nw_src = IPAddr(ip_src)
 			fm.match.nw_dst = IPAddr(ip_dst)
 
-			fm.actions.append(of.ofp_action_output(port=host_port))
+			fm.actions.append(of.ofp_action_output(port=1))
 			conn_last.send(fm)
 
 def launch():
