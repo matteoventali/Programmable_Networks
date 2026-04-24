@@ -7,8 +7,8 @@ ln -s /shared/routing.py pox/ext/routing.py
 
 #apt-get update
 #apt install libpython3.11-stdlib -y
+#apt --fix-broken install -y
 #apt install python3-networkx -y
 #apt install python3-numpy -y
-#apt --fix-broken install -y
 
 chmod +x /home/pox/pox.py
