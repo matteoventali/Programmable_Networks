@@ -111,6 +111,13 @@ control MyIngress(inout headers hdr,
         hdr.ipv4.ttl = hdr.ipv4.ttl - 1;
     }
     
+    action ipv6_forward (bit<48> nh_mac, bit<9> outPort) {
+        standard_metadata.egress_spec = outPort;
+        hdr.ethernet.srcAddr = hdr.ethernet.dstAddr;
+        hdr.ethernet.dstAddr = nh_mac;
+        hdr.ipv6.hopLimit = hdr.ipv6.hopLimit - 1;
+    }
+
     table ipv4_forwarding_table {
         key = {
             hdr.ipv4.dstAddr: lpm;
@@ -123,9 +130,24 @@ control MyIngress(inout headers hdr,
         default_action = drop_packet;
     }
 
+    table ipv6_forwarding_table {
+        key = {
+            hdr.ipv6.dstAddr: lpm;
+        }
+        actions = {
+            ipv6_forward;
+            drop_packet;
+        }
+        size = 10;
+        default_action = drop_packet;
+    }
+
     apply {
         if (hdr.ipv4.isValid()) {
         	ipv4_forwarding_table.apply();
+        }
+        else if (hdr.ipv6.isValid()){
+            ipv6_forwarding_table.apply();
         }
     }
 }
@@ -172,6 +194,7 @@ control MyDeparser(packet_out packet, in headers hdr) {
     apply {
         packet.emit(hdr.ethernet);
         packet.emit(hdr.ipv4);
+        packet.emit(hdr.ipv6);
     }
 }
 
